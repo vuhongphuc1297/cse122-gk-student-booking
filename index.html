@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CampusMind — Đặt lịch tư vấn tâm lý (Bài kiểm tra giữa kỳ CSE122)</title>
+  
+  <!-- Google Fonts: Fraunces & Be Vietnam Pro -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            sage: '#2F7A66',
+            'sage-deep': '#1C5344',
+            'amber-ai': '#D79B34',
+            'clay-alert': '#C4643F',
+            ink: '#16241D',
+            paper: '#F2EEE6',
+            'sage-tint': '#DCEAE3',
+            'sky-info': '#3B6E92',
+            'card-border': '#E4DDD4',
+          },
+          fontFamily: {
+            serif: ['Fraunces', 'Georgia', 'serif'],
+            sans: ['"Be Vietnam Pro"', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <!-- Unified CSS Stylesheet (Design Tokens & Responsive Media Queries & Simulator) -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="bg-[#0F172A] text-ink min-h-screen flex flex-col font-sans selection:bg-sage-tint selection:text-sage-deep">
+
+  <!-- ================= 0. DEVICE SIMULATOR TOOLBAR (CHUYỂN ĐỔI THIẾT BỊ) ================= -->
+  <div id="device-switcher-bar" class="bg-[#16241D] text-white py-2.5 px-4 flex items-center justify-between text-xs sticky top-0 z-50 border-b border-white/10 shadow-lg">
+    <div class="flex items-center gap-2">
+      <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+      <span class="font-bold tracking-wide text-white">Chế độ giả lập thiết bị:</span>
+      <span class="text-[11px] text-white/60 hidden sm:inline">· Click để chuyển đổi Responsive ngay trên trang</span>
+    </div>
+    
+    <div class="flex items-center gap-1.5 bg-white/10 p-1 rounded-xl">
+      <!-- Nút Desktop -->
+      <button 
+        type="button" 
+        onclick="BookingWizard.setDevice('desktop')" 
+        id="btn-dev-desktop" 
+        class="px-3 py-1.5 rounded-lg font-bold flex items-center gap-1.5 bg-sage text-white transition-all shadow-sm"
+        title="Màn hình Desktop đầy đủ (100%)"
+      >
+        <i data-lucide="monitor" class="w-3.5 h-3.5"></i>
+        <span>Desktop</span>
+      </button>
+
+      <!-- Nút Tablet -->
+      <button 
+        type="button" 
+        onclick="BookingWizard.setDevice('tablet')" 
+        id="btn-dev-tablet" 
+        class="px-3 py-1.5 rounded-lg font-semibold flex items-center gap-1.5 text-white/70 hover:bg-white/15 hover:text-white transition-all"
+        title="Giả lập máy tính bảng Tablet (768px)"
+      >
+        <i data-lucide="tablet" class="w-3.5 h-3.5"></i>
+        <span>Tablet (768px)</span>
+      </button>
+
+      <!-- Nút Mobile -->
+      <button 
+        type="button" 
+        onclick="BookingWizard.setDevice('mobile')" 
+        id="btn-dev-mobile" 
+        class="px-3 py-1.5 rounded-lg font-semibold flex items-center gap-1.5 text-white/70 hover:bg-white/15 hover:text-white transition-all"
+        title="Giả lập điện thoại Mobile (390px)"
+      >
+        <i data-lucide="smartphone" class="w-3.5 h-3.5"></i>
+        <span>Mobile (390px)</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ================= APP CONTAINER (BAO BỌC TOÀN BỘ ỨNG DỤNG) ================= -->
+  <div id="app-container" class="w-full flex-1 transition-all duration-300 flex flex-col bg-paper relative shadow-2xl">
+
+    <!-- ================= 1. HEADER (SEMANTIC HTML & RESPONSIVE) ================= -->
+    <header class="bg-white/95 backdrop-blur-md border-b border-card-border sticky top-0 z-40">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+        <!-- Logo -->
+        <a href="#" onclick="BookingWizard.resetBooking(); return false;" class="flex items-center gap-3 text-decoration-none group">
+          <div class="w-9 h-9 rounded-xl bg-sage-deep text-white flex items-center justify-center shadow-sm group-hover:bg-sage transition-colors">
+            <i data-lucide="heart-handshake" class="w-5 h-5 text-emerald-300"></i>
+          </div>
+          <div>
+            <span class="font-serif font-bold text-lg tracking-tight text-ink block leading-none">CampusMind</span>
+            <span class="text-[10px] uppercase tracking-wider text-sage font-semibold">Student Wellbeing Hub</span>
+          </div>
+        </a>
+
+        <!-- Desktop Navigation Links -->
+        <nav class="hidden md:flex items-center space-x-1 text-xs font-semibold text-ink/80 desktop-nav">
+          <a href="#" onclick="BookingWizard.resetBooking(); return false;" class="px-3 py-1.5 rounded-lg hover:bg-sage-tint/40">Trang chủ</a>
+          <a href="#" onclick="BookingWizard.goToStep(1); return false;" class="px-3 py-1.5 rounded-lg bg-sage-tint/60 text-sage-deep font-bold">Đặt lịch tư vấn</a>
+          <a href="#" onclick="alert('Tính năng nằm trong hệ thống tổng thể CampusMind'); return false;" class="px-3 py-1.5 rounded-lg hover:bg-sage-tint/40">Dịch vụ</a>
+          <a href="#" onclick="alert('Tính năng nằm trong hệ thống tổng thể CampusMind'); return false;" class="px-3 py-1.5 rounded-lg hover:bg-sage-tint/40">Tài nguyên</a>
+        </nav>
+
+        <!-- Student Badge & Mobile Hamburger Button -->
+        <div class="flex items-center gap-2">
+          <div class="flex items-center gap-2 bg-sage-tint text-sage-deep px-3 py-1.5 rounded-lg text-xs font-semibold">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span class="user-badge-text">SV. Lê Ngọc An (K64)</span>
+          </div>
+
+          <!-- Mobile Hamburger Toggle -->
+          <button 
+            type="button" 
+            id="mobile-menu-btn" 
+            onclick="BookingWizard.toggleMobileMenu()" 
+            class="hidden md:hidden p-2 rounded-xl border border-card-border bg-paper text-ink hover:bg-sage-tint/40 transition-colors focus:outline-none" 
+            aria-label="Mở danh mục menu trên điện thoại"
+          >
+            <i data-lucide="menu" class="w-5 h-5"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Mobile Navigation Drawer -->
+      <div id="mobile-menu" class="hidden md:hidden border-t border-card-border bg-white px-4 py-3 space-y-1.5 shadow-md">
+        <a href="#" onclick="BookingWizard.resetBooking(); BookingWizard.toggleMobileMenu(); return false;" class="block px-3 py-2 rounded-lg text-xs font-semibold text-ink/80 hover:bg-sage-tint/40">Trang chủ</a>
+        <a href="#" onclick="BookingWizard.goToStep(1); BookingWizard.toggleMobileMenu(); return false;" class="block px-3 py-2 rounded-lg text-xs font-bold bg-sage-tint/60 text-sage-deep">Đặt lịch tư vấn</a>
+        <a href="#" onclick="alert('Tính năng nằm trong hệ thống tổng thể CampusMind'); return false;" class="block px-3 py-2 rounded-lg text-xs font-semibold text-ink/80 hover:bg-sage-tint/40">Dịch vụ</a>
+        <a href="#" onclick="alert('Tính năng nằm trong hệ thống tổng thể CampusMind'); return false;" class="block px-3 py-2 rounded-lg text-xs font-semibold text-ink/80 hover:bg-sage-tint/40">Tài nguyên</a>
+      </div>
+    </header>
+
+    <!-- ================= 2. MAIN CONTENT ================= -->
+    <main class="max-w-4xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-8 flex-1">
+      
+      <!-- Title & Subtitle -->
+      <section class="text-center space-y-1 mb-6 sm:mb-8">
+        <span class="text-xs uppercase font-bold tracking-wider text-sage bg-sage-tint px-3 py-1 rounded-full inline-block">
+          Slide 07 · Luồng Đặt Lịch 4 Bước (BTL-02)
+        </span>
+        <h1 class="font-serif text-2xl sm:text-4xl font-bold text-ink pt-2">Đăng ký lịch tư vấn tâm lý 1-1</h1>
+        <p class="text-xs sm:text-sm text-ink/70 max-w-xl mx-auto">Quy trình đặt lịch trực quan, bảo mật danh tính tuyệt đối và kiểm tra hợp lệ tại chỗ</p>
+      </section>
+
+      <!-- 4-Step Progress Bar (Thanh tiến trình 4 bước thích ứng Mobile) -->
+      <nav aria-label="Tiến trình đặt lịch" class="bg-white p-3.5 sm:p-4 rounded-2xl border border-card-border shadow-xs mb-6 sm:mb-8 step-nav-container">
+        <ol class="flex items-center justify-between text-xs font-semibold list-none m-0 p-0">
+          <!-- Bước 1 -->
+          <li class="flex items-center gap-1.5 sm:gap-2 step-item active" id="step-nav-1">
+            <span class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-sage text-white flex items-center justify-center text-xs font-bold step-number">1</span>
+            <span class="step-label hidden sm:inline">Chọn dịch vụ</span>
+          </li>
+          <li class="h-0.5 flex-1 bg-card-border mx-2 sm:mx-3 step-line" id="line-1"></li>
+
+          <!-- Bước 2 -->
+          <li class="flex items-center gap-1.5 sm:gap-2 step-item text-ink/50" id="step-nav-2">
+            <span class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-card-border text-ink flex items-center justify-center text-xs font-bold step-number">2</span>
+            <span class="step-label hidden sm:inline">Khung giờ</span>
+          </li>
+          <li class="h-0.5 flex-1 bg-card-border mx-2 sm:mx-3 step-line" id="line-2"></li>
+
+          <!-- Bước 3 -->
+          <li class="flex items-center gap-1.5 sm:gap-2 step-item text-ink/50" id="step-nav-3">
+            <span class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-card-border text-ink flex items-center justify-center text-xs font-bold step-number">3</span>
+            <span class="step-label hidden sm:inline">Thông tin</span>
+          </li>
+          <li class="h-0.5 flex-1 bg-card-border mx-2 sm:mx-3 step-line" id="line-3"></li>
+
+          <!-- Bước 4 -->
+          <li class="flex items-center gap-1.5 sm:gap-2 step-item text-ink/50" id="step-nav-4">
+            <span class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-card-border text-ink flex items-center justify-center text-xs font-bold step-number">4</span>
+            <span class="step-label hidden sm:inline">Xác nhận</span>
+          </li>
+        </ol>
+      </nav>
+
+      <!-- ================= 3. FORM WIZARD CARD ================= -->
+      <div class="bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-8 border border-card-border shadow-sm">
+        <form id="booking-form" novalidate>
+
+          <!-- BƯỚC 1: CHỌN DỊCH VỤ -->
+          <fieldset class="space-y-4 sm:space-y-5 wizard-step" id="step-content-1">
+            <legend class="font-serif text-lg sm:text-xl font-bold text-ink mb-1">Bước 1: Chọn dịch vụ bạn cần hỗ trợ</legend>
+            <p class="text-xs text-ink/60 mb-3 sm:mb-4">Các dịch vụ hoàn toàn miễn phí dành cho sinh viên trường Đại học Thủy Lợi</p>
+
+            <div class="space-y-3" id="service-options-container">
+              <!-- Render động từ js/data.js -->
+            </div>
+            <span class="error-msg text-xs text-clay-alert block font-medium" id="service-error"></span>
+
+            <div class="pt-5 sm:pt-6 border-t border-card-border flex justify-end wizard-actions">
+              <button type="button" onclick="BookingWizard.goToStep(2)" class="btn-primary bg-sage hover:bg-sage-deep text-white px-6 py-2.5 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-sm transition-all">
+                <span>Tiếp tục: Chọn khung giờ</span>
+                <i data-lucide="arrow-right" class="w-4 h-4"></i>
+              </button>
+            </div>
+          </fieldset>
+
+          <!-- BƯỚC 2: CHỌN CHUYÊN VIÊN & KHUNG GIỜ -->
+          <fieldset class="space-y-4 sm:space-y-5 wizard-step hidden" id="step-content-2">
+            <legend class="font-serif text-lg sm:text-xl font-bold text-ink mb-1">Bước 2: Chọn chuyên gia và khung giờ trống</legend>
+            <p class="text-xs text-ink/60 mb-3 sm:mb-4">Chọn chuyên gia tâm lý học đường phù hợp với chủ đề của bạn</p>
+
+            <div class="space-y-4">
+              <div>
+                <label for="counselor-select" class="block font-semibold text-xs text-ink mb-1">Chuyên viên tư vấn <span class="text-clay-alert">*</span></label>
+                <select id="counselor-select" onchange="BookingWizard.onCounselorChange()" class="w-full px-3.5 py-2.5 bg-paper rounded-xl border border-card-border focus:outline-none focus:border-sage text-ink text-xs font-medium">
+                  <!-- Render động từ js/data.js -->
+                </select>
+              </div>
+
+              <div>
+                <div class="flex items-center justify-between mb-1">
+                  <label class="font-semibold text-xs text-ink">Khung giờ khả dụng trong tuần <span class="text-clay-alert">*</span></label>
+                  <span class="text-[11px] text-sage font-semibold">Tuần 24 – 29 Tháng 3</span>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1" id="time-slots-container">
+                  <!-- Render động các slot trống còn available -->
+                </div>
+                <input type="hidden" id="selected-slot" value="">
+                <span class="error-msg text-xs text-clay-alert block font-medium mt-1" id="slot-error"></span>
+              </div>
+            </div>
+
+            <div class="pt-5 sm:pt-6 border-t border-card-border flex justify-between wizard-actions">
+              <button type="button" onclick="BookingWizard.goToStep(1)" class="px-5 py-2.5 border border-card-border rounded-xl text-xs font-bold text-ink hover:bg-paper transition-all">
+                ← Quay lại
+              </button>
+              <button type="button" onclick="BookingWizard.goToStep(3)" class="btn-primary bg-sage hover:bg-sage-deep text-white px-6 py-2.5 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-sm transition-all">
+                <span>Tiếp tục: Nhập thông tin</span>
+                <i data-lucide="arrow-right" class="w-4 h-4"></i>
+              </button>
+            </div>
+          </fieldset>
+
+          <!-- BƯỚC 3: NHẬP THÔNG TIN SINH VIÊN -->
+          <fieldset class="space-y-4 wizard-step hidden" id="step-content-3">
+            <legend class="font-serif text-lg sm:text-xl font-bold text-ink mb-1">Bước 3: Thông tin cá nhân & Nội dung chia sẻ</legend>
+            <p class="text-xs text-ink/60 mb-3 sm:mb-4">Chuyên viên sẽ đọc trước ghi chú để chuẩn bị tốt nhất cho buổi tham vấn</p>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4">
+              <div>
+                <label for="student-name" class="block font-semibold text-xs text-ink mb-1">Họ và tên sinh viên <span class="text-clay-alert">*</span></label>
+                <input type="text" id="student-name" value="Lê Ngọc An" class="w-full px-3.5 py-2.5 bg-paper rounded-xl border border-card-border focus:outline-none focus:border-sage text-ink text-xs" />
+                <span class="error-msg text-xs text-clay-alert block font-medium mt-1" id="name-error"></span>
+              </div>
+
+              <div>
+                <label for="student-email" class="block font-semibold text-xs text-ink mb-1">Email sinh viên trường (@student.edu.vn) <span class="text-clay-alert">*</span></label>
+                <input type="email" id="student-email" value="ngocan@student.edu.vn" class="w-full px-3.5 py-2.5 bg-paper rounded-xl border border-card-border focus:outline-none focus:border-sage text-ink text-xs font-mono" />
+                <span class="error-msg text-xs text-clay-alert block font-medium mt-1" id="email-error"></span>
+              </div>
+            </div>
+
+            <div>
+              <label for="booking-topic" class="block font-semibold text-xs text-ink mb-1">Chủ đề cần tư vấn <span class="text-clay-alert">*</span></label>
+              <input type="text" id="booking-topic" value="Áp lực học tập & thi cử cuối kỳ" class="w-full px-3.5 py-2.5 bg-paper rounded-xl border border-card-border focus:outline-none focus:border-sage text-ink text-xs" />
+              <span class="error-msg text-xs text-clay-alert block font-medium mt-1" id="topic-error"></span>
+            </div>
+
+            <div>
+              <label for="booking-notes" class="block font-semibold text-xs text-ink mb-1">Mô tả ngắn gọn khó khăn bạn đang gặp phải</label>
+              <textarea id="booking-notes" rows="3" class="w-full px-3.5 py-2.5 bg-paper rounded-xl border border-card-border focus:outline-none focus:border-sage text-ink text-xs leading-relaxed" placeholder="Dạo này em cảm thấy quá tải với các môn đồ án, hay mất ngủ vào ban đêm...">Dạo này mình thấy quá tải với lịch thi và đồ án, khó tập trung và hay mất ngủ...</textarea>
+            </div>
+
+            <!-- AI-2 Cross-recommendation Option (Slide 07) -->
+            <div class="bg-amber-50/70 border border-amber-200 rounded-2xl p-3.5 sm:p-4 flex items-start gap-3">
+              <input type="checkbox" id="prep-exercise-checkbox" checked class="mt-1 w-4 h-4 rounded text-amber-ai focus:ring-amber-ai">
+              <div>
+                <label for="prep-exercise-checkbox" class="text-xs font-bold text-amber-900 cursor-pointer flex items-center gap-1.5 flex-wrap">
+                  <span class="badge-ai">AI-2</span>
+                  <span>Nhận bài tập chuẩn bị: "Kỹ thuật thở 4-7-8 điều hòa lo âu" trước buổi hẹn</span>
+                </label>
+                <p class="text-[11px] text-amber-800/80 mt-1 leading-relaxed">
+                  AI gợi ý bài tập thư giãn ngắn 5 phút để bạn có tâm thế sẵn sàng và thoải mái nhất trước khi gặp chuyên viên.
+                </p>
+              </div>
+            </div>
+
+            <div class="pt-5 sm:pt-6 border-t border-card-border flex justify-between wizard-actions">
+              <button type="button" onclick="BookingWizard.goToStep(2)" class="px-5 py-2.5 border border-card-border rounded-xl text-xs font-bold text-ink hover:bg-paper transition-all">
+                ← Quay lại
+              </button>
+              <button type="button" onclick="BookingWizard.validateStep3AndProceed()" class="btn-primary bg-sage hover:bg-sage-deep text-white px-6 py-2.5 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-sm transition-all">
+                <span>Tiếp tục: Xác nhận thông tin</span>
+                <i data-lucide="arrow-right" class="w-4 h-4"></i>
+              </button>
+            </div>
+          </fieldset>
+
+          <!-- BƯỚC 4: TÓM TẮT & XÁC NHẬN GỬI YÊU CẦU -->
+          <fieldset class="space-y-4 wizard-step hidden" id="step-content-4">
+            <legend class="font-serif text-lg sm:text-xl font-bold text-ink mb-1">Bước 4: Kiểm tra và xác nhận đăng ký</legend>
+            <p class="text-xs text-ink/60 mb-3 sm:mb-4">Vui lòng rà soát lại thông tin trước khi gửi yêu cầu lên hệ thống</p>
+
+            <div class="bg-paper rounded-2xl p-4 sm:p-5 border border-card-border space-y-3 text-xs" id="summary-review-card">
+              <!-- Render động tóm tắt từ js/main.js -->
+            </div>
+
+            <div class="p-3.5 sm:p-4 bg-emerald-50 rounded-2xl border border-emerald-200 text-xs text-emerald-900 flex items-start gap-2.5">
+              <i data-lucide="shield-check" class="w-4 h-4 text-sage shrink-0 mt-0.5"></i>
+              <div class="leading-relaxed">
+                <span class="font-bold">Cam kết bảo mật thông tin:</span> Toàn bộ nội dung trao đổi được bảo vệ nghiêm ngặt theo quy định đạo đức nghề nghiệp tham vấn tâm lý học đường.
+              </div>
+            </div>
+
+            <div class="pt-5 sm:pt-6 border-t border-card-border flex justify-between wizard-actions">
+              <button type="button" onclick="BookingWizard.goToStep(3)" class="px-5 py-2.5 border border-card-border rounded-xl text-xs font-bold text-ink hover:bg-paper transition-all">
+                ← Quay lại sửa
+              </button>
+              <button type="button" onclick="BookingWizard.submitBooking()" class="bg-sage hover:bg-sage-deep text-white px-6 sm:px-7 py-3 rounded-xl text-xs font-bold flex items-center justify-center gap-2 shadow-md hover:shadow-lg transition-all">
+                <i data-lucide="calendar-check" class="w-4 h-4"></i>
+                <span>Xác nhận gửi yêu cầu đặt lịch</span>
+              </button>
+            </div>
+          </fieldset>
+
+        </form>
+      </div>
+    </main>
+
+    <!-- ================= 4. SUCCESS MODAL POPUP (ASIDE SEMANTIC & RESPONSIVE) ================= -->
+    <aside id="success-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+      <div class="bg-white rounded-3xl max-w-md w-full shadow-2xl p-5 sm:p-8 text-center border border-card-border fade-in">
+        <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-emerald-100 text-sage-deep mx-auto flex items-center justify-center mb-3 sm:mb-4">
+          <i data-lucide="check-circle" class="w-7 h-7 sm:w-8 sm:h-8 text-sage"></i>
+        </div>
+        <h2 class="font-serif font-bold text-xl sm:text-2xl text-ink mb-1">Đặt lịch thành công!</h2>
+        <p class="text-xs text-ink/70 mb-4">
+          Mã lịch hẹn: <span class="font-mono font-bold text-sage-deep" id="modal-apt-code">APT-1049</span>. Yêu cầu của bạn đã được chuyển đến chuyên viên tư vấn.
+        </p>
+
+        <div class="bg-paper p-3.5 sm:p-4 rounded-2xl text-xs text-left mb-5 sm:mb-6 space-y-1.5 border border-card-border">
+          <div><strong>Thời gian:</strong> <span id="modal-apt-time">Thứ Năm, 27/03/2025 · 14:00 – 14:45</span></div>
+          <div><strong>Chuyên viên:</strong> <span id="modal-apt-counselor">TS. Trần Thu Hà</span></div>
+          <div><strong>Trạng thái:</strong> <span class="status-pill status-pending"><span class="status-dot"></span>Đang chờ duyệt</span></div>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-2">
+          <button onclick="BookingWizard.resetBooking()" class="flex-1 py-2.5 sm:py-3 bg-sage hover:bg-sage-deep text-white text-xs font-bold rounded-xl shadow-sm transition-colors text-center">
+            Đặt tiếp lịch khác
+          </button>
+          <button onclick="document.getElementById('success-modal').classList.add('hidden')" class="px-4 py-2.5 sm:py-3 border border-card-border text-xs font-semibold rounded-xl hover:bg-paper">
+            Đóng
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ================= 5. FOOTER (SEMANTIC HTML) ================= -->
+    <footer class="bg-sage-deep text-paper/70 text-xs py-5 sm:py-6 px-4 text-center border-t border-sage/40 mt-auto">
+      <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
+        <span>© 2026 CampusMind · Khoa Công nghệ Thông tin — Trường Đại học Thủy Lợi</span>
+        <span class="text-amber-ai font-semibold">Bài kiểm tra giữa kỳ CSE122 · Luồng Đặt lịch Sinh viên</span>
+      </div>
+    </footer>
+
+  </div> <!-- End #app-container -->
+
+  <!-- ================= 6. SCRIPTS ================= -->
+  <script src="js/data.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
