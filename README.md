@@ -2,9 +2,9 @@
 
 > **Học phần:** Phát triển ứng dụng Web cơ bản (CSE122)  
 > **Khoa:** Công nghệ Thông tin — Trường Đại học Thủy Lợi  
-> **Sinh viên thực hiện:** [HỌ VÀ TÊN SINH VIÊN]  
-> **Mã số sinh viên:** [MÃ SINH VIÊN]  
-> **Lớp:** [LỚP HỌC PHẦN]  
+> **Sinh viên thực hiện:** VŨ HỒNG PHÚC
+> **Mã số sinh viên:** 2551060661
+> **Lớp:** 67CNTT2
 
 ---
 
