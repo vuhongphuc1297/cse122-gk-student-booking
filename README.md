@@ -8,16 +8,6 @@
 
 ---
 
-## 📌 3 LINK NỘP BÀI BẮT BUỘC (Mục V)
-
-| STT | Nội dung nộp | Đường dẫn (Link) | Ghi chú |
-| :---: | :--- | :--- | :--- |
-| **1** | **Link Figma** | `https://www.figma.com/design/...` *(Điền link Figma của bạn tại đây)* | Thiết kế Desktop & Mobile |
-| **2** | **Link GitHub cá nhân** | `https://github.com/[username]/cse122-gk-student-booking` *(Điền link GitHub)* | Chứa toàn bộ source code này |
-| **3** | **Link Video trình bày** | `https://youtu.be/...` hoặc link Drive chia sẻ công khai *(Điền link Video)* | Thời lượng đúng 03 phút |
-
----
-
 ## 1. Tên đề tài
 **CampusMind — Student Wellbeing Hub**  
 Hệ thống nền tảng trực tuyến hỗ trợ chăm sóc sức khỏe tinh thần, tư vấn tâm lý học đường và phát triển bản thân dành riêng cho sinh viên Trường Đại học Thủy Lợi.
@@ -100,39 +90,3 @@ cse122-gk-student-booking/
 └── README.md           # Báo cáo thuyết minh đầy đủ chuẩn 8 mục
 ```
 
----
-
-## 7. Hướng dẫn chạy thử nghiệm
-
-### Cách 1: Chạy trực tiếp (Không cần cài thêm phần mềm)
-- Nhấp đúp chuột trực tiếp vào file [index.html](file:///d:/E/NAM%202/HK%201/WEB/CSE122_BaiGiuaKy/cse122-gk-student-booking/index.html) để mở trên bất kỳ trình duyệt nào (Chrome, Edge, Firefox).
-
-### Cách 2: Chạy qua Live Server hoặc Python HTTP Server
-```bash
-# Mở terminal tại thư mục dự án
-cd cse122-gk-student-booking
-
-# Chạy server cục bộ bằng Python:
-python -m http.server 3000
-```
-Truy cập: `http://localhost:3000`
-
----
-
-## 8. Kịch bản Video thuyết trình 03 phút (Mục III & IV)
-
-Tên file video upload: `CSE122-GK-SVxx-[TenSinhVien]-StudentBooking`
-
-- **Phần 1: Giới thiệu (0:00 – 0:30):**
-  - Giới thiệu bản thân, đề tài *CampusMind*, trang *Student Booking* phục vụ sinh viên trường đăng ký tư vấn tâm lý học đường.
-- **Phần 2: Bản thiết kế Figma (0:30 – 1:00):**
-  - Mở Figma: Trình bày bố cục Desktop và Mobile, giải thích luồng 4 bước và thẻ tóm tắt xác nhận.
-- **Phần 3: Sản phẩm Web hoàn chỉnh (1:00 – 1:30):**
-  - Mở trang web trên trình duyệt: Cho thấy giao diện khớp Figma, bật `F12` kiểm tra Responsive trên Mobile không bị vỡ layout.
-- **Phần 4: Giải thích Mã nguồn (1:30 – 2:30):**
-  - Mở VS Code:
-    - **HTML:** Chỉ cấu trúc Semantic `<form>`, các thẻ `<fieldset>` tương ứng 4 bước, thẻ `<aside>` làm modal.
-    - **CSS:** Chỉ hệ màu 8 Tokens và class `.input-error`, `.selected`.
-    - **JavaScript:** Chỉ hàm `goToStep()` quản lý tiến trình, hàm `validateStep3AndProceed()` kiểm tra email trường `.edu.vn`.
-- **Phần 5: Demo tương tác trực tiếp (2:30 – 3:00):**
-  - Thao tác: Bước 1 chọn dịch vụ $\rightarrow$ Bước 2 chọn giờ $\rightarrow$ Bước 3 cố tình nhập sai email để hiện lỗi đỏ $\rightarrow$ Nhập đúng email `.edu.vn` $\rightarrow$ Bước 4 rà soát và nhấn **Xác nhận** $\rightarrow$ Modal popup thành công hiện ra với mã `APT-XXXX`.
