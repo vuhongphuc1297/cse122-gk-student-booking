@@ -89,4 +89,6 @@ cse122-gk-student-booking/
 ├── assets/             # Thư mục chứa hình ảnh/tài nguyên (nếu có)
 └── README.md           # Báo cáo thuyết minh đầy đủ chuẩn 8 mục
 ```
-
+Link Figma: https://www.figma.com/design/qTKCCVFIt1Uk6pCptMpzk2/CampusMind--Student-Booking?node-id=0-1&t=FH72oWHaI4kmpe7f-1
+Link video: https://youtu.be/PnB12edEH9A
+Link Github: https://github.com/vuhongphuc1297/cse122-gk-student-booking
